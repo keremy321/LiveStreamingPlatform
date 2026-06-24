@@ -209,6 +209,96 @@ public class ChannelsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize]
+    public async Task<IActionResult> Dashboard(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var channel = await _context.Channels.FindAsync(id);
+
+        if (channel == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanManage(channel))
+        {
+            return Forbid();
+        }
+
+        return View(channel);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> GoLive(int id)
+    {
+        var channel = await _context.Channels.FindAsync(id);
+
+        if (channel == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanManage(channel))
+        {
+            return Forbid();
+        }
+
+        channel.IsLive = true;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Dashboard), new { id = channel.Id });
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EndLive(int id)
+    {
+        var channel = await _context.Channels.FindAsync(id);
+
+        if (channel == null)
+        {
+            return NotFound();
+        }
+
+        if (!CanManage(channel))
+        {
+            return Forbid();
+        }
+
+        channel.IsLive = false;
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Dashboard), new { id = channel.Id });
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RegenerateStreamKey(int id)
+    {
+        var channel = await _context.Channels.FindAsync(id);
+
+        if (channel == null)
+            return NotFound();
+
+        if (!CanManage(channel))
+            return Forbid();
+
+        channel.StreamKey = Guid.NewGuid().ToString("N");
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Dashboard), new { id = channel.Id });
+    }
+
     private bool ChannelExists(int? id)
     {
         return _context.Channels.Any(e => e.Id == id);
