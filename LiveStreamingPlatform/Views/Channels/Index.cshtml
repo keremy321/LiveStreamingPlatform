@@ -1,0 +1,72 @@
+@model IEnumerable<LiveStreamingPlatform.Models.Channel>
+
+@{
+    ViewData["Title"] = "Channels";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Browse Channels</h1>
+        <a asp-action="Create" class="btn btn-primary">Create My Channel</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No channels found yet.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var channel in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title">@channel.Name</h5>
+
+                                @if (channel.IsLive)
+                                {
+                                    <span class="badge bg-danger">LIVE</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">OFFLINE</span>
+                                }
+                            </div>
+
+                            <p class="card-text text-muted">
+                                @(string.IsNullOrWhiteSpace(channel.CurrentTitle)
+                                    ? "No stream title"
+                                    : channel.CurrentTitle)
+                            </p>
+
+                            <p class="card-text">
+                                @(string.IsNullOrWhiteSpace(channel.Description)
+                                    ? "No description"
+                                    : channel.Description)
+                            </p>
+
+                            <p class="mb-2">
+                                <strong>Category:</strong>
+                                @(string.IsNullOrWhiteSpace(channel.Category)
+                                    ? "None"
+                                    : channel.Category)
+                            </p>
+
+                            <a asp-action="Details" asp-route-id="@channel.Id" class="btn btn-outline-primary">
+                                Visit Channel
+                            </a>
+
+                            <a asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-outline-secondary">
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
