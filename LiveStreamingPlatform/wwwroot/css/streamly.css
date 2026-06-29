@@ -1,0 +1,852 @@
+:root {
+  --streamly-bg: #0b0b0f;
+  --streamly-surface: #15151d;
+  --streamly-surface-2: #1d1d28;
+  --streamly-surface-3: #262634;
+  --streamly-border: rgba(255, 255, 255, 0.09);
+  --streamly-text: #f3f3f7;
+  --streamly-muted: #a8a8b7;
+  --streamly-soft: #747487;
+  --streamly-accent: #8b5cf6;
+  --streamly-accent-2: #22c55e;
+  --streamly-danger: #ef4444;
+  --streamly-warning: #f59e0b;
+  --streamly-topbar-height: 64px;
+  --streamly-sidebar-width: 236px;
+}
+
+html {
+  background: var(--streamly-bg);
+}
+
+body.streamly-shell {
+  min-height: 100vh;
+  margin-bottom: 0;
+  color: var(--streamly-text);
+  background:
+    radial-gradient(circle at top left, rgba(139, 92, 246, 0.14), transparent 32rem),
+    linear-gradient(180deg, #111118 0%, var(--streamly-bg) 34rem);
+}
+
+a {
+  color: inherit;
+}
+
+.streamly-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  min-height: var(--streamly-topbar-height);
+  background: rgba(13, 13, 19, 0.92);
+  border-bottom: 1px solid var(--streamly-border);
+  backdrop-filter: blur(16px);
+}
+
+.streamly-navbar {
+  min-height: var(--streamly-topbar-height);
+}
+
+.streamly-navbar .navbar-toggler {
+  border-color: var(--streamly-border);
+  background: var(--streamly-surface-2);
+}
+
+.streamly-navbar .navbar-toggler-icon {
+  filter: invert(1) grayscale(1);
+}
+
+.streamly-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--streamly-text);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.streamly-brand:hover,
+.streamly-brand:focus {
+  color: #fff;
+}
+
+.streamly-brand-mark,
+.streamly-sidebar-nav span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--streamly-accent), #c084fc);
+  color: #fff;
+  font-weight: 800;
+}
+
+.streamly-search {
+  position: relative;
+  width: min(100%, 540px);
+}
+
+.streamly-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  z-index: 2;
+  color: var(--streamly-soft);
+  transform: translateY(-50%);
+}
+
+.streamly-search .form-control {
+  height: 2.7rem;
+  padding-left: 2.4rem;
+  color: var(--streamly-text);
+  background: var(--streamly-surface);
+  border: 1px solid var(--streamly-border);
+  border-radius: 8px;
+}
+
+.streamly-search .form-control::placeholder {
+  color: var(--streamly-soft);
+}
+
+.streamly-account-nav {
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.streamly-profile-link {
+  max-width: 220px;
+  color: var(--streamly-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.streamly-mobile-nav .nav-link {
+  color: var(--streamly-muted);
+}
+
+.streamly-sidebar {
+  position: fixed;
+  top: var(--streamly-topbar-height);
+  left: 0;
+  z-index: 1020;
+  width: var(--streamly-sidebar-width);
+  height: calc(100vh - var(--streamly-topbar-height));
+  padding: 1rem;
+  background: rgba(15, 15, 22, 0.9);
+  border-right: 1px solid var(--streamly-border);
+}
+
+.streamly-sidebar-nav {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.streamly-sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.72rem;
+  color: var(--streamly-muted);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.streamly-sidebar-nav a:hover,
+.streamly-sidebar-nav a:focus {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateX(2px);
+}
+
+.streamly-sidebar-nav span {
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--streamly-surface-3);
+  color: var(--streamly-muted);
+  font-size: 0.78rem;
+}
+
+.streamly-content,
+.streamly-footer {
+  margin-left: var(--streamly-sidebar-width);
+}
+
+.streamly-main {
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.streamly-footer {
+  padding: 1.5rem 2rem;
+  color: var(--streamly-soft);
+  border-top: 1px solid var(--streamly-border);
+}
+
+.streamly-footer a {
+  margin-left: 1rem;
+  color: var(--streamly-muted);
+}
+
+.streamly-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.streamly-page-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.35rem);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.streamly-page-header p {
+  max-width: 680px;
+  margin: 0.45rem 0 0;
+  color: var(--streamly-muted);
+}
+
+.streamly-eyebrow {
+  margin: 0 0 0.35rem;
+  color: var(--streamly-accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.streamly-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.streamly-btn-primary {
+  color: #fff;
+  background: var(--streamly-accent);
+  border-color: var(--streamly-accent);
+}
+
+.streamly-btn-primary:hover,
+.streamly-btn-primary:focus {
+  color: #fff;
+  background: #7c3aed;
+  border-color: #7c3aed;
+}
+
+.streamly-btn-outline {
+  color: var(--streamly-text);
+  background: transparent;
+  border-color: var(--streamly-border);
+}
+
+.streamly-btn-outline:hover,
+.streamly-btn-outline:focus,
+.streamly-btn-ghost:hover,
+.streamly-btn-ghost:focus {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.streamly-btn-ghost {
+  color: var(--streamly-muted);
+  background: var(--streamly-surface);
+  border-color: var(--streamly-border);
+}
+
+.streamly-btn-danger {
+  color: #fff;
+  background: var(--streamly-danger);
+  border-color: var(--streamly-danger);
+}
+
+.streamly-btn-success {
+  color: #06120a;
+  background: var(--streamly-accent-2);
+  border-color: var(--streamly-accent-2);
+}
+
+.streamly-channel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.streamly-channel-card,
+.streamly-dashboard-card,
+.streamly-about-panel,
+.streamly-owner-tools,
+.streamly-empty-state {
+  background: rgba(21, 21, 29, 0.86);
+  border: 1px solid var(--streamly-border);
+  border-radius: 8px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.streamly-channel-card {
+  overflow: hidden;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.streamly-channel-card:hover {
+  border-color: rgba(139, 92, 246, 0.55);
+  transform: translateY(-3px);
+}
+
+.streamly-channel-card.is-live .streamly-thumbnail {
+  outline: 1px solid rgba(239, 68, 68, 0.45);
+}
+
+.streamly-thumbnail {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #20202b;
+  text-decoration: none;
+}
+
+.streamly-thumbnail-1 { background: linear-gradient(135deg, #2f2347, #8b5cf6 48%, #111827); }
+.streamly-thumbnail-2 { background: linear-gradient(135deg, #143533, #2dd4bf 48%, #121826); }
+.streamly-thumbnail-3 { background: linear-gradient(135deg, #3c2630, #f97316 48%, #18181f); }
+.streamly-thumbnail-4 { background: linear-gradient(135deg, #1d2b4f, #60a5fa 48%, #111118); }
+.streamly-thumbnail-5 { background: linear-gradient(135deg, #243822, #84cc16 48%, #171717); }
+
+.streamly-thumbnail::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.45;
+}
+
+.streamly-thumbnail-glow {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  filter: blur(18px);
+}
+
+.streamly-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.streamly-badge-live {
+  color: #fff;
+  background: var(--streamly-danger);
+}
+
+.streamly-badge-offline {
+  color: var(--streamly-muted);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--streamly-border);
+}
+
+.streamly-thumbnail .streamly-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+}
+
+.streamly-channel-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.streamly-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #334155, var(--streamly-accent));
+  font-weight: 800;
+}
+
+.streamly-avatar-lg {
+  width: 4rem;
+  height: 4rem;
+  font-size: 1.35rem;
+}
+
+.streamly-channel-copy h2,
+.streamly-watch-info h1,
+.streamly-dashboard-card h2,
+.streamly-about-panel h2,
+.streamly-owner-tools h2,
+.streamly-empty-state h2 {
+  margin: 0;
+  color: var(--streamly-text);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.streamly-channel-copy h2 {
+  font-size: 1.05rem;
+}
+
+.streamly-stream-title {
+  margin: 0.2rem 0;
+  color: var(--streamly-text);
+  font-weight: 700;
+}
+
+.streamly-channel-description {
+  display: -webkit-box;
+  min-height: 2.9rem;
+  margin: 0.4rem 0 0.7rem;
+  color: var(--streamly-muted);
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.streamly-card-meta,
+.streamly-status-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--streamly-muted);
+  font-size: 0.9rem;
+}
+
+.streamly-card-meta span:not(:first-child)::before {
+  margin-right: 0.5rem;
+  content: "/";
+  color: var(--streamly-soft);
+}
+
+.streamly-channel-card .streamly-btn {
+  width: 100%;
+  margin-top: 0.9rem;
+}
+
+.streamly-empty-state {
+  padding: 3rem;
+  text-align: center;
+}
+
+.streamly-empty-state p {
+  color: var(--streamly-muted);
+}
+
+.streamly-watch-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+  gap: 1rem;
+  align-items: start;
+}
+
+.streamly-watch-main {
+    min-width: 0;
+}
+
+.streamly-player-frame {
+  display: grid;
+  min-height: 320px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #050507;
+  border: 1px solid var(--streamly-border);
+  border-radius: 8px;
+}
+
+.streamly-player-frame video {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.streamly-offline-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 2rem;
+  text-align: center;
+  background:
+    linear-gradient(135deg, rgba(139, 92, 246, 0.18), transparent),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 18px);
+}
+
+.streamly-offline-panel h1 {
+  margin: 0.8rem 0 0.35rem;
+}
+
+.streamly-offline-panel p,
+.streamly-about-panel p,
+.streamly-muted {
+  color: var(--streamly-muted);
+}
+
+.streamly-watch-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--streamly-border);
+}
+
+.streamly-watch-heading {
+  display: flex;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.streamly-watch-info h1 {
+  margin-top: 0.35rem;
+  font-size: 1.65rem;
+}
+
+.streamly-watch-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.streamly-owner-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.9rem;
+  color: var(--streamly-muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--streamly-border);
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.streamly-about-panel,
+.streamly-owner-tools {
+  margin-top: 1rem;
+  padding: 1.2rem;
+}
+
+.streamly-owner-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.streamly-tool-actions,
+.streamly-header-actions,
+.streamly-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.streamly-chat-panel {
+    position: fixed;
+    top: var(--streamly-topbar-height);
+    right: 0;
+    z-index: 1040;
+    width: 380px;
+    height: calc(100vh - var(--streamly-topbar-height));
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+    background: rgba(21, 21, 29, 0.96);
+    border-left: 1px solid var(--streamly-border);
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+}
+
+.streamly-chat-header,
+.streamly-chat-composer {
+  padding: 0.9rem;
+  border-bottom: 1px solid var(--streamly-border);
+}
+
+.streamly-chat-composer {
+  border-top: 1px solid var(--streamly-border);
+  border-bottom: 0;
+}
+
+.streamly-chat-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.streamly-chat-header span {
+  color: var(--streamly-soft);
+  font-size: 0.85rem;
+}
+
+.streamly-chat-messages {
+    min-height: 0;
+    overflow-y: auto;
+    
+}
+
+.streamly-chat-placeholder,
+.streamly-chat-message {
+  margin: 0 0 0.7rem;
+  color: var(--streamly-muted);
+}
+
+.streamly-chat-message {
+  padding: 0.45rem 0.55rem;
+  color: var(--streamly-text);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.streamly-chat-message strong {
+  color: #c4b5fd;
+}
+
+.streamly-dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.8fr);
+  gap: 1rem;
+}
+
+.streamly-dashboard-card {
+  padding: 1.2rem;
+}
+
+.streamly-status-card {
+  min-height: 280px;
+}
+
+.streamly-settings-card {
+  grid-row: span 2;
+}
+
+.streamly-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.streamly-stat-list {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0 0 1.4rem;
+}
+
+.streamly-stat-list div {
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--streamly-border);
+  border-radius: 8px;
+}
+
+.streamly-stat-list dt {
+  color: var(--streamly-soft);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.streamly-stat-list dd {
+  margin: 0.15rem 0 0;
+  color: var(--streamly-text);
+  font-weight: 700;
+}
+
+.streamly-field-stack {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.streamly-field-stack label {
+  color: var(--streamly-muted);
+  font-weight: 700;
+}
+
+.streamly-copy-field,
+.form-control {
+  color: var(--streamly-text);
+  background-color: var(--streamly-surface);
+  border-color: var(--streamly-border);
+  border-radius: 8px;
+}
+
+.streamly-copy-field:focus,
+.form-control:focus {
+  color: var(--streamly-text);
+  background-color: var(--streamly-surface);
+  border-color: var(--streamly-accent);
+  box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.22);
+}
+
+.streamly-copy-field[readonly] {
+  background-color: #111118;
+}
+
+.streamly-secret-field {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  letter-spacing: 0;
+}
+
+.streamly-regenerate-form {
+  margin-top: 1rem;
+}
+
+.streamly-dashboard-actions {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.streamly-tool-link {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem;
+  color: var(--streamly-muted);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--streamly-border);
+  border-radius: 8px;
+}
+
+.streamly-tool-link span {
+  color: var(--streamly-text);
+  font-weight: 800;
+}
+
+.streamly-tool-link:hover,
+.streamly-tool-link:focus {
+  color: #fff;
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.text-muted {
+  color: var(--streamly-muted) !important;
+}
+
+.card,
+.modal-content,
+.dropdown-menu {
+  color: var(--streamly-text);
+  background-color: var(--streamly-surface);
+  border-color: var(--streamly-border);
+}
+
+.table {
+  color: var(--streamly-text);
+}
+
+@media (max-width: 991.98px) {
+  .streamly-sidebar {
+    display: none;
+  }
+
+  .streamly-content,
+  .streamly-footer {
+    margin-left: 0;
+  }
+
+  .streamly-main {
+    padding: 1rem;
+  }
+
+  .streamly-search {
+    width: 100%;
+    margin: 0.75rem 0;
+  }
+
+  .streamly-account-nav {
+    align-items: stretch;
+  }
+
+  .streamly-account-nav .streamly-btn,
+  .streamly-profile-link {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+    .streamly-watch-shell {
+        display: block;
+        padding-right: 0;
+    }
+
+    .streamly-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .streamly-chat-panel {
+        position: static;
+        width: 100%;
+        height: auto;
+        margin-top: 1rem;
+        border: 1px solid var(--streamly-border);
+        border-radius: 8px;
+        grid-template-rows: auto minmax(280px, 45vh) auto;
+    }
+}
+
+@media (max-width: 640px) {
+  .streamly-page-header,
+  .streamly-watch-info,
+  .streamly-owner-tools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .streamly-header-actions,
+  .streamly-tool-actions,
+  .streamly-watch-actions,
+  .streamly-action-row {
+    width: 100%;
+  }
+
+  .streamly-btn,
+  .streamly-watch-actions form,
+  .streamly-header-actions .btn,
+  .streamly-tool-actions .btn,
+  .streamly-action-row form {
+    width: 100%;
+  }
+
+  .streamly-player-frame {
+    min-height: 220px;
+  }
+
+  .streamly-channel-grid {
+    grid-template-columns: 1fr;
+  }
+}

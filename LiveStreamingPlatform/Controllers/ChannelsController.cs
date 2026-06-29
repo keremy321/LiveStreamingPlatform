@@ -19,7 +19,94 @@ public class ChannelsController : Controller
     [AllowAnonymous]
     public async Task<IActionResult> Index()    
     {
-        return View(await _context.Channels.ToListAsync());
+        var channels = await _context.Channels
+            .OrderByDescending(c => c.IsLive)
+            .ThenByDescending(c => c.CreatedAt)
+            .ToListAsync();
+
+        await SetFollowerCounts(channels);
+
+        ViewData["BrowseEyebrow"] = "Browse";
+        ViewData["BrowseTitle"] = "Discover live channels";
+        ViewData["BrowseDescription"] = "Find creators, communities, and streams across the platform.";
+
+        return View(channels);
+    }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> LiveChannels()
+    {
+        var channels = await _context.Channels
+            .Where(c => c.IsLive)
+            .OrderByDescending(c => c.CreatedAt)
+            .ToListAsync();
+
+        await SetFollowerCounts(channels);
+
+        ViewData["Title"] = "Live Channels";
+        ViewData["BrowseEyebrow"] = "Live now";
+        ViewData["BrowseTitle"] = "Live channels";
+        ViewData["BrowseDescription"] = "Streams that are currently marked live.";
+
+        return View("Index", channels);
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Following()
+    {
+        var userId = GetUserId();
+
+        var channels = await _context.Follows
+            .Where(f => f.FollowerId == userId)
+            .Join(
+                _context.Channels,
+                follow => follow.ChannelId,
+                channel => channel.Id,
+                (follow, channel) => channel)
+            .OrderByDescending(c => c.IsLive)
+            .ThenBy(c => c.Name)
+            .ToListAsync();
+
+        await SetFollowerCounts(channels);
+
+        ViewData["Title"] = "Following";
+        ViewData["BrowseEyebrow"] = "Following";
+        ViewData["BrowseTitle"] = "Channels you follow";
+        ViewData["BrowseDescription"] = "Keep up with the creators you already follow.";
+
+        return View("Index", channels);
+    }
+
+    [Authorize]
+    public async Task<IActionResult> MyChannel()
+    {
+        var userId = GetUserId();
+
+        var channel = await _context.Channels
+            .FirstOrDefaultAsync(c => c.OwnerId == userId);
+
+        if (channel == null)
+        {
+            return RedirectToAction(nameof(Create));
+        }
+
+        return RedirectToAction(nameof(Details), new { id = channel.Id });
+    }
+
+    [Authorize]
+    public async Task<IActionResult> MyDashboard()
+    {
+        var userId = GetUserId();
+
+        var channel = await _context.Channels
+            .FirstOrDefaultAsync(c => c.OwnerId == userId);
+
+        if (channel == null)
+        {
+            return RedirectToAction(nameof(Create));
+        }
+
+        return RedirectToAction(nameof(Dashboard), new { id = channel.Id });
     }
 
     // GET: CHANNELS/Details/5
@@ -393,5 +480,15 @@ public class ChannelsController : Controller
     private bool CanManage(Channel channel)
     {
         return channel.OwnerId == GetUserId() || User.IsInRole("Admin");
+    }
+
+    private async Task SetFollowerCounts(IReadOnlyCollection<Channel> channels)
+    {
+        var channelIds = channels.Select(c => c.Id).ToList();
+
+        ViewBag.FollowerCounts = await _context.Follows
+            .Where(f => channelIds.Contains(f.ChannelId))
+            .GroupBy(f => f.ChannelId)
+            .ToDictionaryAsync(g => g.Key, g => g.Count());
     }
 }

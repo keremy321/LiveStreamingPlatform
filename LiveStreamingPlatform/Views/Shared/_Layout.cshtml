@@ -3,47 +3,82 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LiveStreamingPlatform</title>
+    <title>@ViewData["Title"] - Streamly</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/streamly.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LiveStreamingPlatform.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LiveStreamingPlatform</a>
+<body class="streamly-shell">
+    <header class="streamly-topbar">
+        <nav class="navbar navbar-expand-lg streamly-navbar">
+            <div class="container-fluid px-3 px-lg-4">
+                <a class="navbar-brand streamly-brand" asp-area="" asp-controller="Channels" asp-action="Index">
+                    <span class="streamly-brand-mark">S</span>
+                    Streamly
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse align-items-center gap-3">
+                    <ul class="navbar-nav streamly-mobile-nav d-lg-none">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Channels" asp-action="Index">Browse</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Channels" asp-action="Index">Channels</a>
+                            <a class="nav-link" asp-area="" asp-controller="Channels" asp-action="Following">Following</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Channels" asp-action="LiveChannels">Live Channels</a>
                         </li>
                     </ul>
+                    <form class="streamly-search mx-lg-auto" asp-area="" asp-controller="Channels" asp-action="Index" method="get">
+                        <span class="streamly-search-icon" aria-hidden="true">/</span>
+                        <input class="form-control" type="search" name="q" placeholder="Search streams, creators, categories" aria-label="Search streams" />
+                    </form>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <aside class="streamly-sidebar" aria-label="Primary navigation">
+        <nav class="streamly-sidebar-nav">
+            <a asp-area="" asp-controller="Channels" asp-action="Index">
+                <span aria-hidden="true">B</span>
+                Browse
+            </a>
+            <a asp-area="" asp-controller="Channels" asp-action="Following">
+                <span aria-hidden="true">F</span>
+                Following
+            </a>
+            <a asp-area="" asp-controller="Channels" asp-action="LiveChannels">
+                <span aria-hidden="true">L</span>
+                Live Channels
+            </a>
+            <a asp-area="" asp-controller="Channels" asp-action="MyChannel">
+                <span aria-hidden="true">M</span>
+                My Channel
+            </a>
+            <a asp-area="" asp-controller="Channels" asp-action="MyDashboard">
+                <span aria-hidden="true">D</span>
+                Dashboard
+            </a>
+        </nav>
+    </aside>
+
+    <div class="streamly-content">
+        <main role="main" class="streamly-main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - LiveStreamingPlatform - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="streamly-footer">
+        <div>
+            &copy; 2026 Streamly
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

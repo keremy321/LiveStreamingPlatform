@@ -1,97 +1,110 @@
-﻿@model LiveStreamingPlatform.Models.Channel
+@model LiveStreamingPlatform.Models.Channel
 
 @{
     ViewData["Title"] = "Streamer Dashboard";
+    var title = string.IsNullOrWhiteSpace(Model.CurrentTitle) ? "No stream title" : Model.CurrentTitle;
+    var category = string.IsNullOrWhiteSpace(Model.Category) ? "Uncategorized" : Model.Category;
+    var streamKey = string.IsNullOrWhiteSpace(Model.StreamKey) ? $"channel-{Model.Id}" : Model.StreamKey;
 }
 
-<div class="container mt-4">
-    <h1>Streamer Dashboard</h1>
+<section class="streamly-page-header">
+    <div>
+        <p class="streamly-eyebrow">Creator dashboard</p>
+        <h1>@Model.Name</h1>
+        <p>Manage stream status, OBS settings, and channel details.</p>
+    </div>
+    <div class="streamly-header-actions">
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn streamly-btn streamly-btn-outline">View Channel</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn streamly-btn streamly-btn-ghost">Edit Channel</a>
+    </div>
+</section>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <h3>@Model.Name</h3>
-
-                    @if (Model.IsLive)
-                    {
-                        <span class="badge bg-danger">LIVE</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary">OFFLINE</span>
-                    }
-
-                    <p class="mt-3">
-                        <strong>Current Title:</strong>
-                        @(string.IsNullOrWhiteSpace(Model.CurrentTitle) ? "No stream title" : Model.CurrentTitle)
-                    </p>
-
-                    <p>
-                        <strong>Category:</strong>
-                        @(string.IsNullOrWhiteSpace(Model.Category) ? "No category" : Model.Category)
-                    </p>
-                </div>
-
-                <div>
-                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-primary">
-                        View Channel
-                    </a>
-
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">
-                        Edit Channel
-                    </a>
-                </div>
+<section class="streamly-dashboard-grid">
+    <article class="streamly-dashboard-card streamly-status-card">
+        <div class="streamly-card-header-row">
+            <div>
+                <p class="streamly-eyebrow">Stream status</p>
+                <h2>@(Model.IsLive ? "You are live" : "Ready to stream")</h2>
             </div>
-        </div>
-    </div>
-
-    <div class="card mt-4">
-        <div class="card-header">
-            Stream Settings
-        </div>
-
-        <div class="card-body">
-            <p>
-                <strong>OBS Server URL:</strong>
-            </p>
-
-            <input class="form-control mb-3" value="@ViewBag.RtmpBaseUrl" readonly />
-
-            <p>
-                <strong>OBS Stream Key:</strong>
-            </p>
-
-            <input class="form-control mb-3" value="channel-@Model.Id" readonly />
-
-            <p class="text-muted">
-                Use these values in OBS Settings → Stream → Custom.
-            </p>
-        </div>
-    </div>
-
-    <div class="card mt-4">
-        <div class="card-header">
-            Stream Status
+            @if (Model.IsLive)
+            {
+                <span class="streamly-badge streamly-badge-live">LIVE</span>
+            }
+            else
+            {
+                <span class="streamly-badge streamly-badge-offline">OFFLINE</span>
+            }
         </div>
 
-        <div class="card-body">
+        <dl class="streamly-stat-list">
+            <div>
+                <dt>Title</dt>
+                <dd>@title</dd>
+            </div>
+            <div>
+                <dt>Category</dt>
+                <dd>@category</dd>
+            </div>
+        </dl>
+
+        <div class="streamly-action-row">
             @if (Model.IsLive)
             {
                 <form asp-action="EndLive" asp-route-id="@Model.Id" method="post">
-                    <button type="submit" class="btn btn-danger">
-                        End Stream
-                    </button>
+                    <button type="submit" class="btn streamly-btn streamly-btn-danger">End Stream</button>
                 </form>
             }
             else
             {
                 <form asp-action="GoLive" asp-route-id="@Model.Id" method="post">
-                    <button type="submit" class="btn btn-success">
-                        Go Live
-                    </button>
+                    <button type="submit" class="btn streamly-btn streamly-btn-success">Go Live</button>
                 </form>
             }
         </div>
-    </div>
-</div>
+    </article>
+
+    <article class="streamly-dashboard-card streamly-settings-card">
+        <div class="streamly-card-header-row">
+            <div>
+                <p class="streamly-eyebrow">OBS settings</p>
+                <h2>Stream connection</h2>
+            </div>
+        </div>
+
+        <div class="streamly-field-stack">
+            <label for="obsServerUrl">OBS Server URL</label>
+            <input id="obsServerUrl" class="form-control streamly-copy-field" value="@ViewBag.RtmpBaseUrl" readonly />
+        </div>
+
+        <div class="streamly-field-stack">
+            <label for="obsStreamKey">Stream Key</label>
+            <input id="obsStreamKey" class="form-control streamly-copy-field streamly-secret-field" value="@streamKey" readonly />
+        </div>
+
+        <p class="streamly-muted">Use these values in OBS Settings -> Stream -> Custom.</p>
+
+        <form asp-action="RegenerateStreamKey" asp-route-id="@Model.Id" method="post" class="streamly-regenerate-form">
+            <button type="submit" class="btn streamly-btn streamly-btn-outline">Regenerate Stream Key</button>
+        </form>
+    </article>
+
+    <article class="streamly-dashboard-card">
+        <div class="streamly-card-header-row">
+            <div>
+                <p class="streamly-eyebrow">Channel tools</p>
+                <h2>Quick actions</h2>
+            </div>
+        </div>
+
+        <div class="streamly-dashboard-actions">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="streamly-tool-link">
+                <span>Edit</span>
+                Update channel title, category, and description.
+            </a>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="streamly-tool-link">
+                <span>View</span>
+                Open the public watch page.
+            </a>
+        </div>
+    </article>
+</section>

@@ -1,72 +1,74 @@
 @model IEnumerable<LiveStreamingPlatform.Models.Channel>
 
 @{
-    ViewData["Title"] = "Channels";
+    if (ViewData["Title"] == null)
+    {
+        ViewData["Title"] = "Channels";
+    }
+
+    var followerCounts = ViewBag.FollowerCounts as IDictionary<int, int> ?? new Dictionary<int, int>();
+    var browseEyebrow = ViewData["BrowseEyebrow"]?.ToString() ?? "Browse";
+    var browseTitle = ViewData["BrowseTitle"]?.ToString() ?? "Discover live channels";
+    var browseDescription = ViewData["BrowseDescription"]?.ToString() ?? "Find creators, communities, and streams across the platform.";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Browse Channels</h1>
-        <a asp-action="Create" class="btn btn-primary">Create My Channel</a>
+<section class="streamly-page-header">
+    <div>
+        <p class="streamly-eyebrow">@browseEyebrow</p>
+        <h1>@browseTitle</h1>
+        <p>@browseDescription</p>
     </div>
+    <a asp-action="Create" class="btn streamly-btn streamly-btn-primary">Create My Channel</a>
+</section>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info">
-            No channels found yet.
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            @foreach (var channel in Model)
-            {
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <h5 class="card-title">@channel.Name</h5>
+@if (!Model.Any())
+{
+    <section class="streamly-empty-state">
+        <h2>No channels found</h2>
+        <p>There are no streams in this view yet.</p>
+        <a asp-action="Create" class="btn streamly-btn streamly-btn-primary">Start a Channel</a>
+    </section>
+}
+else
+{
+    <section class="streamly-channel-grid" aria-label="Channels">
+        @foreach (var channel in Model)
+        {
+            var followerCount = followerCounts.TryGetValue(channel.Id, out var count) ? count : 0;
+            var title = string.IsNullOrWhiteSpace(channel.CurrentTitle) ? "No stream title" : channel.CurrentTitle;
+            var category = string.IsNullOrWhiteSpace(channel.Category) ? "Uncategorized" : channel.Category;
+            var description = string.IsNullOrWhiteSpace(channel.Description) ? "This creator has not added a channel description yet." : channel.Description;
+            var initial = string.IsNullOrWhiteSpace(channel.Name) ? "S" : channel.Name.Substring(0, 1).ToUpperInvariant();
 
-                                @if (channel.IsLive)
-                                {
-                                    <span class="badge bg-danger">LIVE</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-secondary">OFFLINE</span>
-                                }
-                            </div>
+            <article class="streamly-channel-card @(channel.IsLive ? "is-live" : "")">
+                <a class="streamly-thumbnail streamly-thumbnail-@((channel.Id % 5) + 1)" asp-action="Details" asp-route-id="@channel.Id" aria-label="Watch @channel.Name">
+                    @if (channel.IsLive)
+                    {
+                        <span class="streamly-badge streamly-badge-live">LIVE</span>
+                    }
+                    else
+                    {
+                        <span class="streamly-badge streamly-badge-offline">OFFLINE</span>
+                    }
+                    <span class="streamly-thumbnail-glow"></span>
+                </a>
 
-                            <p class="card-text text-muted">
-                                @(string.IsNullOrWhiteSpace(channel.CurrentTitle)
-                                    ? "No stream title"
-                                    : channel.CurrentTitle)
-                            </p>
-
-                            <p class="card-text">
-                                @(string.IsNullOrWhiteSpace(channel.Description)
-                                    ? "No description"
-                                    : channel.Description)
-                            </p>
-
-                            <p class="mb-2">
-                                <strong>Category:</strong>
-                                @(string.IsNullOrWhiteSpace(channel.Category)
-                                    ? "None"
-                                    : channel.Category)
-                            </p>
-
-                            <a asp-action="Details" asp-route-id="@channel.Id" class="btn btn-outline-primary">
-                                Visit Channel
-                            </a>
-
-                            <a asp-action="Edit" asp-route-id="@channel.Id" class="btn btn-outline-secondary">
-                                Edit
-                            </a>
+                <div class="streamly-channel-body">
+                    <div class="streamly-avatar" aria-hidden="true">@initial</div>
+                    <div class="streamly-channel-copy">
+                        <h2>@channel.Name</h2>
+                        <p class="streamly-stream-title">@title</p>
+                        <p class="streamly-channel-description">@description</p>
+                        <div class="streamly-card-meta">
+                            <span>@category</span>
+                            <span>@followerCount followers</span>
                         </div>
+                        <a asp-action="Details" asp-route-id="@channel.Id" class="btn streamly-btn streamly-btn-outline">
+                            Visit Channel
+                        </a>
                     </div>
                 </div>
-            }
-        </div>
-    }
-</div>
+            </article>
+        }
+    </section>
+}
