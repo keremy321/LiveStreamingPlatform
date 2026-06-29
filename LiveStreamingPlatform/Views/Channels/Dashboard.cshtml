@@ -53,22 +53,20 @@
 
         <div class="card-body">
             <p>
-                <strong>Server URL:</strong>
+                <strong>OBS Server URL:</strong>
             </p>
 
-            <input class="form-control mb-3" value="rtmp://localhost:1935/live" readonly />
+            <input class="form-control mb-3" value="@ViewBag.RtmpBaseUrl" readonly />
 
             <p>
-                <strong>Stream Key:</strong>
+                <strong>OBS Stream Key:</strong>
             </p>
 
-            <input class="form-control mb-3" value="@Model.StreamKey" readonly />
+            <input class="form-control mb-3" value="channel-@Model.Id" readonly />
 
-            <form asp-action="RegenerateStreamKey" asp-route-id="@Model.Id" method="post">
-                <button type="submit" class="btn btn-warning">
-                    Regenerate Stream Key
-                </button>
-            </form>
+            <p class="text-muted">
+                Use these values in OBS Settings → Stream → Custom.
+            </p>
         </div>
     </div>
 

@@ -27,16 +27,37 @@ public class ChannelsController : Controller
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
-        {
             return NotFound();
-        }
 
         var channel = await _context.Channels
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id);
+
         if (channel == null)
-        {
             return NotFound();
+
+        var followerCount = await _context.Follows
+            .CountAsync(f => f.ChannelId == channel.Id);
+
+        ViewBag.FollowerCount = followerCount;
+
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            var userId = GetUserId();
+
+            var isFollowing = await _context.Follows
+                .AnyAsync(f => f.ChannelId == channel.Id && f.FollowerId == userId);
+
+            ViewBag.IsFollowing = isFollowing;
         }
+        else
+        {
+            ViewBag.IsFollowing = false;
+        }
+
+        var hlsBaseUrl = HttpContext.RequestServices
+            .GetRequiredService<IConfiguration>()["MediaServer:HlsBaseUrl"];
+
+        ViewBag.HlsUrl = $"{hlsBaseUrl}/live/channel-{channel.Id}/index.m3u8";
 
         return View(channel);
     }
@@ -229,6 +250,11 @@ public class ChannelsController : Controller
             return Forbid();
         }
 
+        var rtmpBaseUrl = HttpContext.RequestServices
+            .GetRequiredService<IConfiguration>()["MediaServer:RtmpBaseUrl"];
+
+        ViewBag.RtmpBaseUrl = rtmpBaseUrl;
+
         return View(channel);
     }
 
@@ -297,6 +323,61 @@ public class ChannelsController : Controller
         await _context.SaveChangesAsync();
 
         return RedirectToAction(nameof(Dashboard), new { id = channel.Id });
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Follow(int id)
+    {
+        var channel = await _context.Channels.FindAsync(id);
+
+        if (channel == null)
+            return NotFound();
+
+        var userId = GetUserId();
+
+        if (channel.OwnerId == userId)
+        {
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        var alreadyFollowing = await _context.Follows
+            .AnyAsync(f => f.ChannelId == id && f.FollowerId == userId);
+
+        if (!alreadyFollowing)
+        {
+            var follow = new Follow 
+            {
+                ChannelId = id,
+                FollowerId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Follows.Add(follow);
+            await _context.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Unfollow(int id)
+    {
+        var userId = GetUserId();
+
+        var follow = await _context.Follows
+            .FirstOrDefaultAsync(f => f.ChannelId == id && f.FollowerId == userId);
+
+        if (follow != null)
+        {
+            _context.Follows.Remove(follow);
+            await _context.SaveChangesAsync();
+        }
+
+        return RedirectToAction(nameof(Details), new { id });
     }
 
     private bool ChannelExists(int? id)
